@@ -1,0 +1,66 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function profile(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data;
+    }
+
+    function hasProfile(uid) {
+      return exists(/databases/$(database)/documents/users/$(uid));
+    }
+
+    function isSuperAdmin() {
+      return signedIn() && hasProfile(request.auth.uid)
+        && profile(request.auth.uid).role == 'superadmin';
+    }
+
+    function isApprovedAdmin() {
+      return signedIn() && hasProfile(request.auth.uid)
+        && profile(request.auth.uid).role == 'admin'
+        && profile(request.auth.uid).status == 'approved';
+    }
+
+    // Perfiles de usuario
+    match /users/{uid} {
+      // Cada persona lee su propio perfil; el super admin lee todos.
+      allow read: if signedIn() && (request.auth.uid == uid || isSuperAdmin());
+
+      // Solicitud de acceso: solo se puede crear el propio perfil como
+      // administrador "pendiente". Nadie puede auto-asignarse super admin ni aprobarse.
+      allow create: if signedIn()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['name', 'email', 'role', 'status', 'createdAt'])
+        && request.resource.data.role == 'admin'
+        && request.resource.data.status == 'pending'
+        && request.resource.data.email.lower() == request.auth.token.email.lower();
+
+      // Solo el super admin aprueba, rechaza o elimina, y no puede cambiar roles.
+      allow update: if isSuperAdmin()
+        && request.resource.data.role == resource.data.role;
+      allow delete: if isSuperAdmin();
+    }
+
+    // Torneos: lectura pública (visitantes), escritura solo del dueño aprobado.
+    match /tournaments/{tid} {
+      allow read: if true;
+      allow create: if isApprovedAdmin()
+        && request.resource.data.ownerId == request.auth.uid;
+      allow update, delete: if (isApprovedAdmin() && resource.data.ownerId == request.auth.uid)
+        || isSuperAdmin();
+
+      // Grupos, equipos, jugadores, partidos, etc. (se usarán en las siguientes etapas)
+      match /{sub=**} {
+        allow read: if true;
+        allow write: if (isApprovedAdmin()
+          && get(/databases/$(database)/documents/tournaments/$(tid)).data.ownerId == request.auth.uid)
+          || isSuperAdmin();
+      }
+    }
+  }
+}
