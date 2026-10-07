@@ -1,6 +1,35 @@
-# Encancha.ec — Etapa 1
+# Encancha.ec — Etapas 1 y 2
 
-Esta primera etapa incluye:
+## Si ya tenías la Etapa 1 funcionando (actualizar a la Etapa 2)
+
+No necesitas instalar nada nuevo ni cambiar tu archivo `.env`. Solo haz esto:
+
+1. Reemplaza la carpeta `src` y los archivos `firestore.rules` y `LEEME.md` del proyecto por los de este zip. **No copies** `node_modules` ni tu archivo `.env`.
+2. En Firebase, entra a **Firestore Database > Reglas**, pega todo el contenido del nuevo `firestore.rules` y pulsa **Publicar**. Es obligatorio: las reglas nuevas protegen los campeonatos para que solo su dueño los modifique.
+3. Si la app está corriendo, detén la terminal con `Ctrl + C` y vuelve a ejecutar `npm run dev`.
+4. Para subir los cambios a GitHub (y a Vercel):
+
+```
+git add .
+git commit -m "Etapa 2: campeonatos, grupos, equipos y jugadores"
+git push
+```
+
+### Qué incluye la Etapa 2
+
+- **Campeonato:** lista de tus campeonatos, asistente de 3 pasos (datos generales, formato y reglas) y pantalla del campeonato con sus grupos y equipos.
+- **Deporte:** Fútbol o Básquet. Cada uno trae valores iniciales, pero **todo se puede editar**: número y duración de los tiempos, cronómetro, tiempo extra, formas de anotar y su valor, puntos de la clasificación, criterios de desempate, tarjetas, faltas, sustituciones, tiempos muertos, cantidad y posiciones de los jugadores.
+- **Formato:** fase de grupos, todos contra todos, eliminación directa, o grupos y eliminación directa.
+- **Logo y color:** el logo se reduce automáticamente y se guarda dentro de la base de datos (no usa Firebase Storage, así no necesitas plan de pago). El color se elige con la paleta de índices de Excel.
+- **Equipos y jugadores:** equipos con logo, color, sigla, grupo y director técnico. Jugadores con nombre, número y posición, uno por uno o pegando una lista (también copiada desde Excel).
+- **Duplicar campeonato:** crea una nueva edición copiando solo las reglas y grupos, o también los equipos, o todo con los jugadores. Las fechas, los partidos y los resultados no se copian.
+- **Lista de equipos** (barra inferior) y **vista pública** para visitantes con los equipos y sus jugadores.
+
+---
+
+## Etapa 1
+
+La primera etapa incluye:
 
 - Pantalla de inicio con acceso para **Administrador** y para **Visitante** (sin registro).
 - Solicitud de acceso para administradores, que queda **pendiente** hasta que el super admin la apruebe.
@@ -110,6 +139,8 @@ Prueba esto en orden:
 4. En la ventana de incógnito la pantalla cambia sola y entra al panel con la barra de píldora inferior.
 5. Cierra sesión y prueba la pestaña **Visitante**.
 
+Para probar la Etapa 2, entra como administrador aprobado y en **Campeonato** pulsa **Nuevo campeonato**. Crea uno, agrega un par de equipos, entra a un equipo y agrega jugadores. Luego prueba **Duplicar** desde la lista de campeonatos y mira cómo se ve desde la pestaña **Visitante**.
+
 Si algo no funciona, copia el mensaje de error de la terminal o de la consola del navegador y pásamelo.
 
 ## Paso 8. Probar la instalación como app (PWA)
@@ -139,14 +170,16 @@ Abre la dirección que muestra la terminal. En Chrome verás el ícono de instal
 
 ```
 src/
-  pages/        Pantallas (Login, Pending, SuperAdmin, AdminLayout, VisitorHome)
-  components/   Piezas reutilizables (barra de píldora, logo, rutas protegidas)
-  context/      Manejo de sesión y roles
-  firebase.js   Conexión con Firebase
-public/         Logo e íconos de la app
-firestore.rules Reglas de seguridad de la base de datos
+  pages/          Pantallas (Login, Pending, SuperAdmin, AdminLayout, VisitorHome, VisitorTournament)
+  pages/admin/    Campeonatos, asistente, panel del campeonato, lista de equipos y detalle de equipo
+  components/     Piezas reutilizables (barra de píldora, ventanas, selector de color, logo, reglas)
+  context/        Manejo de sesión, roles y campeonato activo
+  utils/          Deportes y reglas, paleta de Excel, lectura de listas de jugadores, base de datos
+  firebase.js     Conexión con Firebase
+public/           Logo e íconos de la app
+firestore.rules   Reglas de seguridad de la base de datos
 ```
 
 ## Próxima etapa
 
-**Etapa 2: Crear campeonato.** Elección de deporte (fútbol o básquet) con tiempos y reglas editables, y registro de grupos, equipos y jugadores con logo y color.
+**Etapa 3: Sorteo, calendario y encuentros de hoy.** Ruleta aleatoria para armar los enfrentamientos por grupo, calendario generado a partir del sorteo (editable) y la lista de partidos del día.
