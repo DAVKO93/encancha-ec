@@ -6,6 +6,7 @@ import SetupNeeded from './pages/SetupNeeded'
 import Login from './pages/Login'
 import Pending from './pages/Pending'
 import VisitorHome from './pages/VisitorHome'
+import VisitorTournament from './pages/VisitorTournament'
 import SuperAdmin from './pages/SuperAdmin'
 import AdminLayout from './pages/AdminLayout'
 
@@ -17,6 +18,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/visitante" element={<VisitorHome />} />
+        <Route path="/visitante/:id" element={<VisitorTournament />} />
         <Route path="/pendiente" element={<Pending />} />
         <Route
           path="/super"

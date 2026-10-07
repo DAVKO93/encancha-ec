@@ -4,6 +4,7 @@ import { collection, onSnapshot } from 'firebase/firestore'
 import { ArrowLeft, Trophy } from 'lucide-react'
 import { db } from '../firebase'
 import Logo from '../components/Logo'
+import TeamBadge from '../components/TeamBadge'
 import { Spinner } from '../components/Loader'
 
 const SPORTS = { futbol: 'Fútbol', basquet: 'Básquet' }
@@ -70,9 +71,19 @@ export default function VisitorHome() {
           ) : (
             <ul className="grid gap-3 sm:grid-cols-2">
               {tournaments.map((t) => (
-                <li key={t.id} className="card p-5">
-                  <p className="eyebrow">{SPORTS[t.sport] || 'Deporte'}</p>
-                  <p className="mt-2 text-lg font-semibold tracking-tight">{t.name || 'Torneo sin nombre'}</p>
+                <li key={t.id}>
+                  <Link
+                    to={`/visitante/${t.id}`}
+                    className="card flex h-full items-center gap-4 p-5 transition hover:border-ink"
+                  >
+                    <TeamBadge item={t} size={52} />
+                    <span className="min-w-0">
+                      <span className="eyebrow block">{SPORTS[t.sport] || 'Deporte'}</span>
+                      <span className="mt-1 block truncate text-lg font-semibold tracking-tight">
+                        {t.name || 'Torneo sin nombre'}
+                      </span>
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -1,9 +1,16 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
-import { CalendarCheck, ClipboardList, ListOrdered, Shuffle, Trophy, Users } from 'lucide-react'
+import { CalendarCheck, ClipboardList, ListOrdered, Shuffle } from 'lucide-react'
+import { TournamentProvider } from '../context/TournamentContext'
 import TopBar from '../components/TopBar'
 import PillNav from '../components/PillNav'
+import Championships from './admin/Championships'
+import TournamentForm from './admin/TournamentForm'
+import TournamentManage from './admin/TournamentManage'
+import TeamsList from './admin/TeamsList'
+import TeamDetail from './admin/TeamDetail'
 
-function Section({ icon: Icon, eyebrow, title, description, stage }) {
+// Secciones que se activan en las siguientes etapas.
+function Upcoming({ icon: Icon, eyebrow, title, description, stage }) {
   return (
     <>
       <p className="eyebrow">{eyebrow}</p>
@@ -23,16 +30,7 @@ function Section({ icon: Icon, eyebrow, title, description, stage }) {
   )
 }
 
-const SECTIONS = [
-  {
-    path: 'crear',
-    icon: Trophy,
-    eyebrow: 'Campeonato',
-    title: 'Crear campeonato',
-    description:
-      'Elige el deporte, configura tiempos y reglas, y registra grupos, equipos y jugadores con su logo y color.',
-    stage: 'Etapa 2'
-  },
+const UPCOMING = [
   {
     path: 'hoy',
     icon: CalendarCheck,
@@ -40,14 +38,6 @@ const SECTIONS = [
     title: 'Encuentros de hoy',
     description: 'Los partidos programados para hoy. Entra a uno para pitarlo en vivo.',
     stage: 'Etapa 3'
-  },
-  {
-    path: 'equipos',
-    icon: Users,
-    eyebrow: 'Plantillas',
-    title: 'Lista de equipos',
-    description: 'Todos los equipos de tu campeonato con sus jugadores, grupos y colores.',
-    stage: 'Etapa 2'
   },
   {
     path: 'clasificacion',
@@ -89,14 +79,22 @@ function Shell() {
 
 export default function AdminLayout() {
   return (
-    <Routes>
-      <Route element={<Shell />}>
-        <Route index element={<Navigate to="crear" replace />} />
-        {SECTIONS.map(({ path, ...rest }) => (
-          <Route key={path} path={path} element={<Section {...rest} />} />
-        ))}
-        <Route path="*" element={<Navigate to="crear" replace />} />
-      </Route>
-    </Routes>
+    <TournamentProvider>
+      <Routes>
+        <Route element={<Shell />}>
+          <Route index element={<Navigate to="crear" replace />} />
+          <Route path="crear" element={<Championships />} />
+          <Route path="crear/nuevo" element={<TournamentForm />} />
+          <Route path="crear/:id" element={<TournamentManage />} />
+          <Route path="crear/:id/editar" element={<TournamentForm />} />
+          <Route path="equipos" element={<TeamsList />} />
+          <Route path="equipos/:teamId" element={<TeamDetail />} />
+          {UPCOMING.map(({ path, ...rest }) => (
+            <Route key={path} path={path} element={<Upcoming {...rest} />} />
+          ))}
+          <Route path="*" element={<Navigate to="crear" replace />} />
+        </Route>
+      </Routes>
+    </TournamentProvider>
   )
 }
