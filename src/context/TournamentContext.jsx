@@ -3,6 +3,7 @@ import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import { useAuth } from './AuthContext'
 import { withDefaults } from '../utils/sports'
+import { compareMatches } from '../utils/schedule'
 
 export const TournamentContext = createContext(null)
 
@@ -38,7 +39,8 @@ export function TournamentProvider({ children }) {
   const [rawGroups, setGroups] = useState([])
   const [rawTeams, setTeams] = useState([])
   const [rawPlayers, setPlayers] = useState([])
-  const [loaded, setLoaded] = useState({ groups: false, teams: false, players: false })
+  const [rawMatches, setMatches] = useState([])
+  const [loaded, setLoaded] = useState({ groups: false, teams: false, players: false, matches: false })
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -72,7 +74,8 @@ export function TournamentProvider({ children }) {
     setGroups([])
     setTeams([])
     setPlayers([])
-    setLoaded({ groups: false, teams: false, players: false })
+    setMatches([])
+    setLoaded({ groups: false, teams: false, players: false, matches: false })
     if (!activeId) return undefined
 
     const listen = (name, setter) =>
@@ -88,7 +91,7 @@ export function TournamentProvider({ children }) {
         }
       )
 
-    const unsubs = [listen('groups', setGroups), listen('teams', setTeams), listen('players', setPlayers)]
+    const unsubs = [listen('groups', setGroups), listen('teams', setTeams), listen('players', setPlayers), listen('matches', setMatches)]
     return () => unsubs.forEach((u) => u())
   }, [activeId])
 
@@ -107,8 +110,10 @@ export function TournamentProvider({ children }) {
     [rawPlayers]
   )
 
+  const matches = useMemo(() => [...rawMatches].sort(compareMatches), [rawMatches])
+
   const tournamentsReady = tournaments !== null
-  const dataReady = tournamentsReady && (!activeId || (loaded.groups && loaded.teams && loaded.players))
+  const dataReady = tournamentsReady && (!activeId || (loaded.groups && loaded.teams && loaded.players && loaded.matches))
 
   const value = useMemo(
     () => ({
@@ -120,10 +125,11 @@ export function TournamentProvider({ children }) {
       groups,
       teams,
       players,
+      matches,
       dataReady,
       error
     }),
-    [tournaments, tournamentsReady, active, activeId, setActiveId, groups, teams, players, dataReady, error]
+    [tournaments, tournamentsReady, active, activeId, setActiveId, groups, teams, players, matches, dataReady, error]
   )
 
   return <TournamentContext.Provider value={value}>{children}</TournamentContext.Provider>

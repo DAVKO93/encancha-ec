@@ -7,6 +7,7 @@ import { formatRange } from '../utils/format'
 import { FORMATS, SPORTS, usesGroups, withDefaults } from '../utils/sports'
 import Logo from '../components/Logo'
 import TeamBadge from '../components/TeamBadge'
+import ScheduleList from '../components/ScheduleList'
 import { Spinner } from '../components/Loader'
 import { EmptyState } from '../components/ui'
 
@@ -60,6 +61,7 @@ export default function VisitorTournament() {
   const [groups, setGroups] = useState([])
   const [teams, setTeams] = useState([])
   const [players, setPlayers] = useState([])
+  const [matches, setMatches] = useState([])
 
   useEffect(() => {
     setTournament(undefined)
@@ -72,7 +74,8 @@ export default function VisitorTournament() {
       ),
       onSnapshot(collection(db, 'tournaments', id, 'groups'), (s) => setGroups(mapDocs(s)), () => {}),
       onSnapshot(collection(db, 'tournaments', id, 'teams'), (s) => setTeams(mapDocs(s)), () => {}),
-      onSnapshot(collection(db, 'tournaments', id, 'players'), (s) => setPlayers(mapDocs(s)), () => {})
+      onSnapshot(collection(db, 'tournaments', id, 'players'), (s) => setPlayers(mapDocs(s)), () => {}),
+      onSnapshot(collection(db, 'tournaments', id, 'matches'), (s) => setMatches(mapDocs(s)), () => {})
     ]
     return () => unsubs.forEach((u) => u())
   }, [id])
@@ -174,9 +177,15 @@ export default function VisitorTournament() {
         )}
         {t.description && <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-mute">{t.description}</p>}
 
-        <div className="mt-10 rounded-2xl border border-line p-5">
-          <p className="text-[15px] font-semibold tracking-tight">Cronograma y resultados</p>
-          <p className="mt-1 text-sm text-mute">Estarán disponibles aquí cuando el administrador programe los partidos.</p>
+        <h2 className="mt-12 text-2xl font-semibold tracking-tight">Cronograma y resultados</h2>
+        <div className="mt-5">
+          {matches.length === 0 ? (
+            <p className="rounded-2xl border border-dashed border-line px-4 py-8 text-center text-sm text-mute">
+              Estarán disponibles aquí cuando el administrador programe los partidos.
+            </p>
+          ) : (
+            <ScheduleList matches={matches} teams={sortedTeams} groups={sortedGroups} />
+          )}
         </div>
 
         <h2 className="mt-12 text-2xl font-semibold tracking-tight">Equipos</h2>

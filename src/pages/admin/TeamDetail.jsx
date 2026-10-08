@@ -18,7 +18,7 @@ import { EmptyState } from '../../components/ui'
 export default function TeamDetail() {
   const { teamId } = useParams()
   const navigate = useNavigate()
-  const { tournamentsReady, active, groups, teams, players, dataReady } = useTournaments()
+  const { tournamentsReady, active, groups, teams, players, dataReady, matches } = useTournaments()
 
   const [editingTeam, setEditingTeam] = useState(false)
   const [playerModal, setPlayerModal] = useState(null) // null | { player? }
@@ -78,6 +78,12 @@ export default function TeamDetail() {
     setBusy(true)
     setError('')
     try {
+      if (matches.some((m) => m.homeId === team.id || m.awayId === team.id)) {
+        setError('Este equipo tiene partidos en el calendario. Elimina esos partidos o haz un nuevo sorteo antes de borrarlo.')
+        setDeletingTeam(false)
+        setBusy(false)
+        return
+      }
       await inChunks(roster, (p) => saveFast(deleteDoc(doc(db, 'tournaments', active.id, 'players', p.id)), 4000))
       await saveFast(deleteDoc(doc(db, 'tournaments', active.id, 'teams', team.id)))
       navigate('/admin/equipos', { replace: true })

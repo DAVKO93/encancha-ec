@@ -1,4 +1,34 @@
-# Encancha.ec — Etapas 1 y 2
+# Encancha.ec — Etapas 1, 2 y 3
+
+## Si ya tenías la Etapa 2 funcionando (actualizar a la Etapa 3)
+
+No hay que instalar nada ni cambiar `.env`, y **las reglas de Firestore no cambian** (no hace falta republicarlas).
+
+1. Reemplaza la carpeta `src` y el archivo `LEEME.md` del proyecto por los de este zip. **No copies** `node_modules` ni `.env`.
+2. Si la app está corriendo, detén la terminal con `Ctrl + C` y ejecuta `npm run dev`.
+3. Para subir los cambios:
+
+```
+git add .
+git commit -m "Etapa 3: sorteo, calendario y encuentros de hoy"
+git push
+```
+
+### Qué incluye la Etapa 3
+
+- **Sorteo con ruleta** (barra inferior > Sorteo): la ruleta gira y saca un equipo por vez; también hay "Sorteo rápido".
+  - *Sorteo de grupos:* reparte los equipos entre los grupos de forma pareja (solo los que no tienen grupo, o todos).
+  - *Sorteo de enfrentamientos:* el orden de salida arma las jornadas. Todos contra todos (con ida y vuelta si el campeonato lo tiene activado) o primera ronda de eliminación directa (si sobran equipos, los primeros pasan directo).
+  - El resultado se ve antes de confirmar y se puede repetir.
+- **Fechas y horas:** al confirmar eliges primer día, hora, días de la semana (por defecto sábado y domingo), partidos por día, minutos entre partidos y canchas. Todo se puede cambiar después.
+- **Calendario** (pestaña dentro de Sorteo): lista por día; editar fecha, hora y cancha de cada partido, agregar partidos a mano, eliminarlos, reprogramar fechas o borrar todo el calendario.
+- **Encuentros de hoy:** partidos de hoy, pendientes de días anteriores y próximos. El botón "Pitar partido" se activa en la Etapa 4.
+- **Visitantes:** ven el cronograma del campeonato (solo lectura).
+- Un equipo con partidos en el calendario no se puede eliminar hasta borrar esos partidos.
+- Con "grupos y eliminación directa", las llaves se generarán al terminar la fase de grupos (Etapa 5).
+
+---
+
 
 ## Si ya tenías la Etapa 1 funcionando (actualizar a la Etapa 2)
 
@@ -34,7 +64,7 @@ La primera etapa incluye:
 - Pantalla de inicio con acceso para **Administrador** y para **Visitante** (sin registro).
 - Solicitud de acceso para administradores, que queda **pendiente** hasta que el super admin la apruebe.
 - Panel del **super admin** para aprobar, rechazar o revocar administradores.
-- Panel del **administrador** con la barra de píldora inferior y sus 6 secciones (Campeonato, Hoy, Equipos, Posiciones, Resultados, Sorteo). Por ahora cada sección muestra su pantalla vacía; se llenan en las siguientes etapas.
+- Panel del **administrador** con la barra de píldora inferior y sus 6 secciones (Campeonato, Hoy, Equipos, Posiciones, Resultados, Sorteo). Las secciones se fueron activando en cada etapa.
 - Vista pública para visitantes.
 - App instalable en el celular (PWA), con diseño en blanco y negro y el gris azulado del logo en detalles sutiles.
 
@@ -182,4 +212,4 @@ firestore.rules   Reglas de seguridad de la base de datos
 
 ## Próxima etapa
 
-**Etapa 3: Sorteo, calendario y encuentros de hoy.** Ruleta aleatoria para armar los enfrentamientos por grupo, calendario generado a partir del sorteo (editable) y la lista de partidos del día.
+**Etapa 4: Pitar el partido en vivo.** Cronómetro, goles o puntos con su autor, tarjetas, faltas, sustituciones, tiempos muertos y deshacer.

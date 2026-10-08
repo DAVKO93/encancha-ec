@@ -1,8 +1,7 @@
-import { collection, deleteDoc, doc, getDocs, serverTimestamp, setDoc } from 'firebase/firestore'
+import { collection, deleteDoc, doc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 
 // Subcolecciones que viven dentro de un campeonato. Se borran junto con él.
-// (En la Etapa 3 se agregarán "matches" y lo que haga falta.)
 export const SUBCOLLECTIONS = ['groups', 'teams', 'players', 'matches']
 
 // Si no hay conexión, Firebase deja el cambio en cola y la promesa tarda en resolverse.
@@ -91,4 +90,35 @@ export async function duplicateTournament({ source, name, level, ownerId, ownerN
   })
 
   return newRef.id
+}
+
+// ---------- Partidos y sorteo ----------
+
+// Reemplaza todos los partidos del campeonato por los nuevos (sorteo confirmado).
+export async function replaceMatches(tid, oldMatches, newMatches) {
+  await inChunks(oldMatches, (m) => saveFast(deleteDoc(doc(db, 'tournaments', tid, 'matches', m.id)), 4000))
+  await inChunks(newMatches, (m) => {
+    const ref = doc(collection(db, 'tournaments', tid, 'matches'))
+    return saveFast(setDoc(ref, { ...m, createdAt: serverTimestamp() }), 4000)
+  })
+}
+
+export function addMatch(tid, data) {
+  const ref = doc(collection(db, 'tournaments', tid, 'matches'))
+  return saveFast(setDoc(ref, { ...data, createdAt: serverTimestamp() }))
+}
+
+export function updateMatch(tid, matchId, patch) {
+  return saveFast(updateDoc(doc(db, 'tournaments', tid, 'matches', matchId), patch))
+}
+
+export function deleteMatch(tid, matchId) {
+  return saveFast(deleteDoc(doc(db, 'tournaments', tid, 'matches', matchId)))
+}
+
+// Guarda en los equipos el grupo que les tocó en el sorteo. "assignment" es un Map equipo -> grupo.
+export async function assignTeamGroups(tid, assignment) {
+  await inChunks([...assignment.entries()], ([teamId, groupId]) =>
+    saveFast(updateDoc(doc(db, 'tournaments', tid, 'teams', teamId), { groupId }), 4000)
+  )
 }

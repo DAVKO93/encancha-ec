@@ -1,5 +1,5 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
-import { CalendarCheck, ClipboardList, ListOrdered, Shuffle } from 'lucide-react'
+import { ClipboardList, ListOrdered } from 'lucide-react'
 import { TournamentProvider } from '../context/TournamentContext'
 import TopBar from '../components/TopBar'
 import PillNav from '../components/PillNav'
@@ -8,6 +8,8 @@ import TournamentForm from './admin/TournamentForm'
 import TournamentManage from './admin/TournamentManage'
 import TeamsList from './admin/TeamsList'
 import TeamDetail from './admin/TeamDetail'
+import Today from './admin/Today'
+import Draw from './admin/Draw'
 
 // Secciones que se activan en las siguientes etapas.
 function Upcoming({ icon: Icon, eyebrow, title, description, stage }) {
@@ -32,14 +34,6 @@ function Upcoming({ icon: Icon, eyebrow, title, description, stage }) {
 
 const UPCOMING = [
   {
-    path: 'hoy',
-    icon: CalendarCheck,
-    eyebrow: 'Calendario',
-    title: 'Encuentros de hoy',
-    description: 'Los partidos programados para hoy. Entra a uno para pitarlo en vivo.',
-    stage: 'Etapa 3'
-  },
-  {
     path: 'clasificacion',
     icon: ListOrdered,
     eyebrow: 'Posiciones',
@@ -54,14 +48,6 @@ const UPCOMING = [
     title: 'Lista de resultados',
     description: 'Todos los partidos jugados, con opción de exportar cada informe en PDF.',
     stage: 'Etapa 5'
-  },
-  {
-    path: 'sorteo',
-    icon: Shuffle,
-    eyebrow: 'Sorteo',
-    title: 'Sorteo de encuentros',
-    description: 'Ruleta aleatoria para definir los enfrentamientos según grupo y equipo.',
-    stage: 'Etapa 3'
   }
 ]
 
@@ -89,6 +75,8 @@ export default function AdminLayout() {
           <Route path="crear/:id/editar" element={<TournamentForm />} />
           <Route path="equipos" element={<TeamsList />} />
           <Route path="equipos/:teamId" element={<TeamDetail />} />
+          <Route path="hoy" element={<Today />} />
+          <Route path="sorteo" element={<Draw />} />
           {UPCOMING.map(({ path, ...rest }) => (
             <Route key={path} path={path} element={<Upcoming {...rest} />} />
           ))}
