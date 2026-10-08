@@ -82,7 +82,7 @@ export default function TournamentManage() {
       <div className="flex items-start gap-4">
         <TeamBadge item={t} size={64} />
         <div className="min-w-0 flex-1">
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight">{t.name}</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold leading-tight tracking-tight [overflow-wrap:anywhere]">{t.name}</h1>
           <p className="mt-1 text-[13px] text-mute">
             {SPORTS[t.sport]?.label} · {FORMATS[t.format.type]?.label}
           </p>
@@ -128,7 +128,7 @@ export default function TournamentManage() {
                 return (
                   <li key={g.id} className="flex items-center gap-3 px-4 py-3">
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-[15px] font-semibold tracking-tight">{g.name}</p>
+                      <p className="[overflow-wrap:anywhere] text-[15px] font-semibold tracking-tight">{g.name}</p>
                       <p className="text-[12px] text-mute">
                         {count} {count === 1 ? 'equipo' : 'equipos'}
                       </p>

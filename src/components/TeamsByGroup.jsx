@@ -8,7 +8,7 @@ function TeamRow({ team, count, to }) {
     <>
       <TeamBadge item={team} size={44} />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[15px] font-semibold tracking-tight">{team.name}</p>
+        <p className="[overflow-wrap:anywhere] text-[15px] font-semibold tracking-tight">{team.name}</p>
         <p className="text-[12px] text-mute">
           {count} {count === 1 ? 'jugador' : 'jugadores'}
           {team.coach ? ` · DT ${team.coach}` : ''}

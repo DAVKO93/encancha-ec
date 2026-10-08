@@ -64,7 +64,7 @@ export default function TeamsList() {
       >
         <TeamBadge item={active} size={36} />
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-[14px] font-semibold">{active.name}</span>
+          <span className="block [overflow-wrap:anywhere] text-[14px] font-semibold">{active.name}</span>
           <span className="block text-[12px] text-mute">{SPORTS[active.sport]?.label} · Cambiar de campeonato</span>
         </span>
       </Link>

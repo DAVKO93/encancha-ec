@@ -172,7 +172,7 @@ export default function Championships() {
                     <TeamBadge item={t} size={56} />
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <p className="truncate text-[18px] font-semibold tracking-tight">{t.name}</p>
+                        <p className="[overflow-wrap:anywhere] text-[18px] font-semibold tracking-tight">{t.name}</p>
                         {isActive && (
                           <span className="rounded-full border border-accent px-2 py-0.5 text-[10px] font-semibold uppercase tracking-label text-accent">
                             Activo

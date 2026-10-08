@@ -7,7 +7,7 @@ function TeamSide({ team, align }) {
   return (
     <div className={`flex min-w-0 flex-1 items-center gap-2.5 ${right ? 'flex-row-reverse text-right' : ''}`}>
       <TeamBadge item={team} size={34} />
-      <span className="min-w-0 truncate text-[14px] font-semibold tracking-tight">{team?.name || 'Equipo eliminado'}</span>
+      <span className="min-w-0 [overflow-wrap:anywhere] text-[14px] font-semibold tracking-tight">{team?.name || 'Equipo eliminado'}</span>
     </div>
   )
 }
@@ -29,7 +29,7 @@ export function MatchRow({ match, teamsById, groupsById, onEdit, action }) {
             {match.time}
           </span>
         )}
-        {details && <span className="min-w-0 truncate">{details}</span>}
+        {details && <span className="min-w-0 [overflow-wrap:anywhere]">{details}</span>}
         <span className="ml-auto shrink-0">
           {match.status !== 'scheduled' && (
             <span className="rounded-full border border-ink px-2 py-0.5 text-[10px] font-semibold uppercase tracking-label text-ink">

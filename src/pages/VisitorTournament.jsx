@@ -25,7 +25,7 @@ function TeamCard({ team, roster }) {
       >
         <TeamBadge item={team} size={44} />
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-[15px] font-semibold tracking-tight">{team.name}</span>
+          <span className="block [overflow-wrap:anywhere] text-[15px] font-semibold tracking-tight">{team.name}</span>
           <span className="block text-[12px] text-mute">
             {roster.length} {roster.length === 1 ? 'jugador' : 'jugadores'}
             {team.coach ? ` · DT ${team.coach}` : ''}
@@ -42,7 +42,7 @@ function TeamCard({ team, roster }) {
               {roster.map((p) => (
                 <li key={p.id} className="flex items-center gap-3 text-[14px]">
                   <span className="w-6 text-right font-semibold tabular-nums">{p.number}</span>
-                  <span className="min-w-0 flex-1 truncate">{p.name}</span>
+                  <span className="min-w-0 flex-1 [overflow-wrap:anywhere]">{p.name}</span>
                   {p.position && <span className="text-[11px] text-mute">{p.position}</span>}
                 </li>
               ))}
@@ -154,7 +154,7 @@ export default function VisitorTournament() {
           <TeamBadge item={t} size={72} />
           <div className="min-w-0">
             <p className="eyebrow">{SPORTS[t.sport]?.label}</p>
-            <h1 className="mt-1 text-3xl font-semibold leading-tight tracking-tight">{t.name}</h1>
+            <h1 className="mt-1 text-2xl sm:text-3xl font-semibold leading-tight tracking-tight [overflow-wrap:anywhere]">{t.name}</h1>
             <p className="mt-1 text-[13px] text-mute">{FORMATS[t.format.type]?.label}</p>
           </div>
         </div>

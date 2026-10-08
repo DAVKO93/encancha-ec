@@ -184,7 +184,7 @@ export default function TeamDetail() {
                     {p.number}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[15px] font-medium">{p.name}</p>
+                    <p className="[overflow-wrap:anywhere] text-[15px] font-medium">{p.name}</p>
                     {p.position && <p className="text-[12px] text-mute">{p.position}</p>}
                   </div>
                   <button

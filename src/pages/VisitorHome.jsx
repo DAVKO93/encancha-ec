@@ -79,7 +79,7 @@ export default function VisitorHome() {
                     <TeamBadge item={t} size={52} />
                     <span className="min-w-0">
                       <span className="eyebrow block">{SPORTS[t.sport] || 'Deporte'}</span>
-                      <span className="mt-1 block truncate text-lg font-semibold tracking-tight">
+                      <span className="mt-1 block [overflow-wrap:anywhere] text-lg font-semibold tracking-tight">
                         {t.name || 'Torneo sin nombre'}
                       </span>
                     </span>

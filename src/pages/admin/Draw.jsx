@@ -20,7 +20,7 @@ function TeamLine({ team, n }) {
     <li className="flex items-center gap-3 px-4 py-2.5">
       {n !== undefined && <span className="w-5 text-right text-[13px] font-semibold tabular-nums text-mute">{n}</span>}
       <TeamBadge item={team} size={30} />
-      <span className="min-w-0 flex-1 truncate text-[14px] font-medium">{team.name}</span>
+      <span className="min-w-0 flex-1 [overflow-wrap:anywhere] text-[14px] font-medium">{team.name}</span>
     </li>
   )
 }
