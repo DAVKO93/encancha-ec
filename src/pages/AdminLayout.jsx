@@ -10,6 +10,7 @@ import TeamsList from './admin/TeamsList'
 import TeamDetail from './admin/TeamDetail'
 import Today from './admin/Today'
 import Draw from './admin/Draw'
+import MatchLive from './admin/MatchLive'
 
 // Secciones que se activan en las siguientes etapas.
 function Upcoming({ icon: Icon, eyebrow, title, description, stage }) {
@@ -76,6 +77,7 @@ export default function AdminLayout() {
           <Route path="equipos" element={<TeamsList />} />
           <Route path="equipos/:teamId" element={<TeamDetail />} />
           <Route path="hoy" element={<Today />} />
+          <Route path="hoy/:matchId" element={<MatchLive />} />
           <Route path="sorteo" element={<Draw />} />
           {UPCOMING.map(({ path, ...rest }) => (
             <Route key={path} path={path} element={<Upcoming {...rest} />} />

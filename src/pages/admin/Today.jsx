@@ -53,11 +53,9 @@ export default function Today() {
           teamsById={teamsById}
           groupsById={groupsById}
           action={
-            m.status === 'finished' ? null : (
-              <button type="button" disabled title="Se activa en la Etapa 4" className="btn-solid btn-sm">
-                Pitar partido
-              </button>
-            )
+            <Link to={`/admin/hoy/${m.id}`} className={`${m.status === 'scheduled' ? 'btn-solid' : 'btn-outline'} btn-sm`}>
+              {m.status === 'scheduled' ? 'Pitar partido' : m.status === 'live' ? 'Continuar' : 'Ver partido'}
+            </Link>
           }
         />
       ))}
@@ -111,9 +109,6 @@ export default function Today() {
         </section>
       )}
 
-      {todays.length > 0 && (
-        <p className="mt-8 text-[13px] text-mute">El pitado en vivo (cronómetro, goles y tarjetas) llega en la Etapa 4.</p>
-      )}
     </>
   )
 }

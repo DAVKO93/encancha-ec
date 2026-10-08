@@ -1,4 +1,33 @@
-# Encancha.ec — Etapas 1, 2 y 3
+# Encancha.ec — Etapas 1 a 4
+
+## Si ya tenías la Etapa 3 funcionando (actualizar a la Etapa 4)
+
+No hay que instalar nada, cambiar `.env` ni republicar reglas.
+
+1. Reemplaza la carpeta `src` y el `LEEME.md` por los de este zip (sin tocar `node_modules` ni `.env`).
+2. Reinicia con `npm run dev` y sube los cambios:
+
+```
+git add .
+git commit -m "Etapa 4: pitar el partido en vivo"
+git push
+```
+
+### Qué incluye la Etapa 4
+
+En **Hoy**, cada partido tiene el botón **Pitar partido** (luego **Continuar** o **Ver partido**).
+
+- **Alineaciones:** marcas los titulares de cada equipo (por defecto los primeros según los jugadores en cancha de las reglas). Los jugadores expulsados en su último partido, o que acumularon las amarillas de suspensión, aparecen marcados como *Suspendido*.
+- **Cronómetro:** iniciar, pausar, reanudar, terminar tiempo, descanso e inicio del siguiente tiempo. Fútbol: el reloj sube y el 2.º tiempo sigue desde el 45:00. Básquet: reloj regresivo que se detiene solo en 00:00. Todo según las reglas del campeonato.
+- **Anotaciones:** cada tipo de gol o punto que definiste (en fútbol, con opción de gol en contra), con el jugador que anotó o "sin identificar".
+- **Disciplina:** faltas (por jugador y de equipo, con aviso de bonus), tarjetas amarilla y roja (la 2.ª amarilla expulsa), expulsión por límite de faltas.
+- **Cambios y tiempos muertos:** con sus límites; el tiempo muerto pausa el reloj y cuenta los segundos.
+- **Cronología:** todos los eventos con su minuto; "Deshacer último" y quitar cualquier evento recalcula marcador, alineación y estadísticas.
+- **Fin del partido:** si hay empate y se necesita ganador (eliminatoria o deporte sin empates) ofrece tiempo extra o penales. Se puede **reabrir** un partido finalizado para corregirlo.
+- Los visitantes ven el partido "En juego" con el marcador en vivo.
+
+---
+
 
 ## Si ya tenías la Etapa 2 funcionando (actualizar a la Etapa 3)
 
@@ -212,4 +241,4 @@ firestore.rules   Reglas de seguridad de la base de datos
 
 ## Próxima etapa
 
-**Etapa 4: Pitar el partido en vivo.** Cronómetro, goles o puntos con su autor, tarjetas, faltas, sustituciones, tiempos muertos y deshacer.
+**Etapa 5: Clasificación, resultados y PDF.** Tabla de posiciones por grupo, lista de resultados, llaves de eliminación, vista completa del visitante y exportación a PDF (informe del partido con jugadores, goleadores y posiciones).
