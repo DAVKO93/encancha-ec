@@ -76,7 +76,7 @@ export function MatchRow({ match, teamsById, groupsById, onEdit, action }) {
 }
 
 // Lista de partidos agrupada por día.
-export default function ScheduleList({ matches, teams, groups, onEdit }) {
+export default function ScheduleList({ matches, teams, groups, onEdit, onReport }) {
   const teamsById = new Map(teams.map((t) => [t.id, t]))
   const groupsById = new Map(groups.map((g) => [g.id, g]))
   const today = todayStr()
@@ -92,7 +92,14 @@ export default function ScheduleList({ matches, teams, groups, onEdit }) {
           </h3>
           <ul className="divide-y divide-line overflow-hidden rounded-2xl border border-line">
             {d.matches.map((m) => (
-              <MatchRow key={m.id} match={m} teamsById={teamsById} groupsById={groupsById} onEdit={onEdit} />
+              <MatchRow
+                key={m.id}
+                match={m}
+                teamsById={teamsById}
+                groupsById={groupsById}
+                onEdit={onEdit}
+                action={onReport && m.status === 'finished' ? onReport(m) : null}
+              />
             ))}
           </ul>
         </section>

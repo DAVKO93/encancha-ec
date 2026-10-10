@@ -6,6 +6,7 @@ import { inChunks, saveFast, updateMatch } from '../../utils/db'
 import { compareMatches, scheduleMatches } from '../../utils/schedule'
 import MatchModal from '../../components/MatchModal'
 import Modal from '../../components/Modal'
+import PdfButton from '../../components/PdfButton'
 import ScheduleList from '../../components/ScheduleList'
 import ScheduleSettings, { useSchedule } from '../../components/ScheduleSettings'
 import { Spinner } from '../../components/Loader'
@@ -53,6 +54,9 @@ export default function Calendar({ onGoDraw }) {
             <CalendarClock className="h-4 w-4" />
             Reprogramar fechas
           </button>
+        )}
+        {matches.length > 0 && (
+          <PdfButton label="Exportar PDF" make={(pdf) => pdf.exportCalendar({ tournament: t, groups, teams, matches })} />
         )}
       </div>
 

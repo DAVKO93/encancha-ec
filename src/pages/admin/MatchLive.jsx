@@ -26,6 +26,7 @@ import EventPicker from '../../components/EventPicker'
 import { ConfirmDialog } from '../../components/Modal'
 import TeamBadge from '../../components/TeamBadge'
 import FullScreenLoader from '../../components/Loader'
+import PdfButton from '../../components/PdfButton'
 import { EmptyState, ErrorList, NumberField } from '../../components/ui'
 
 const EVENT_TEXT = { score: 'Anotación', foul: 'Falta', yellow: 'Amarilla', red: 'Roja', sub: 'Cambio', timeout: 'Tiempo muerto' }
@@ -82,7 +83,7 @@ function Lineup({ team, roster, selected, onToggle, suspended, rules }) {
 
 export default function MatchLive() {
   const { matchId } = useParams()
-  const { tournamentsReady, active: t, teams, players, matches, dataReady } = useTournaments()
+  const { tournamentsReady, active: t, teams, players, groups, matches, dataReady } = useTournaments()
   const [now, setNow] = useState(Date.now())
   const [picker, setPicker] = useState(null)
   const [lineup, setLineup] = useState(null)
@@ -639,7 +640,10 @@ export default function MatchLive() {
               <RotateCcw className="h-4 w-4" />
               Reabrir partido
             </button>
-            <span className="text-[12px] text-mute">La exportación del informe en PDF llega en la Etapa 5.</span>
+            <PdfButton
+              label="Exportar informe PDF"
+              make={(pdf) => pdf.exportMatchReport({ tournament: t, match, teams, players, groups, matches })}
+            />
           </div>
         </>
       )}

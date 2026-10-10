@@ -122,3 +122,8 @@ export async function assignTeamGroups(tid, assignment) {
     saveFast(updateDoc(doc(db, 'tournaments', tid, 'teams', teamId), { groupId }), 4000)
   )
 }
+
+// Agrega partidos nuevos (por ejemplo, la siguiente ronda de la fase final).
+export function createMatches(tid, list) {
+  return inChunks(list, (m) => addMatch(tid, m))
+}

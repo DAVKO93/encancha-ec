@@ -6,6 +6,7 @@ import { norm } from '../../utils/format'
 import { SPORTS } from '../../utils/sports'
 import TeamBadge from '../../components/TeamBadge'
 import TeamFormModal from '../../components/TeamFormModal'
+import PdfButton from '../../components/PdfButton'
 import TeamsByGroup from '../../components/TeamsByGroup'
 import { Spinner } from '../../components/Loader'
 import { EmptyState } from '../../components/ui'
@@ -68,6 +69,15 @@ export default function TeamsList() {
           <span className="block text-[12px] text-mute">{SPORTS[active.sport]?.label} · Cambiar de campeonato</span>
         </span>
       </Link>
+
+      {teams.length > 0 && (
+        <div className="mt-4">
+          <PdfButton
+            label="Exportar equipos y jugadores"
+            make={(pdf) => pdf.exportTeams({ tournament: active, groups, teams, players })}
+          />
+        </div>
+      )}
 
       <div className="mt-6 flex items-center gap-3">
         <div className="relative flex-1">

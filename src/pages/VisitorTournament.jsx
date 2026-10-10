@@ -8,8 +8,12 @@ import { FORMATS, SPORTS, usesGroups, withDefaults } from '../utils/sports'
 import Logo from '../components/Logo'
 import TeamBadge from '../components/TeamBadge'
 import ScheduleList from '../components/ScheduleList'
+import PdfButton from '../components/PdfButton'
+import StandingsTable from '../components/StandingsTable'
+import { KnockoutSection } from './admin/Standings'
+import { computeAllStandings } from '../utils/standings'
 import { Spinner } from '../components/Loader'
-import { EmptyState } from '../components/ui'
+import { EmptyState, Segmented } from '../components/ui'
 
 const byName = (a, b) => (a.name || '').localeCompare(b.name || '', 'es')
 
@@ -62,6 +66,7 @@ export default function VisitorTournament() {
   const [teams, setTeams] = useState([])
   const [players, setPlayers] = useState([])
   const [matches, setMatches] = useState([])
+  const [tab, setTab] = useState('partidos')
 
   useEffect(() => {
     setTournament(undefined)
@@ -82,6 +87,10 @@ export default function VisitorTournament() {
 
   const sortedGroups = useMemo(() => [...groups].sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || byName(a, b)), [groups])
   const sortedTeams = useMemo(() => [...teams].sort(byName), [teams])
+  const tables = useMemo(
+    () => (tournament ? computeAllStandings({ tournament, groups: sortedGroups, teams: sortedTeams, matches }) : []),
+    [tournament, sortedGroups, sortedTeams, matches]
+  )
   const rosterOf = (teamId) =>
     players.filter((p) => p.teamId === teamId).sort((a, b) => (a.number ?? 0) - (b.number ?? 0))
 
@@ -177,37 +186,93 @@ export default function VisitorTournament() {
         )}
         {t.description && <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-mute">{t.description}</p>}
 
-        <h2 className="mt-12 text-2xl font-semibold tracking-tight">Cronograma y resultados</h2>
-        <div className="mt-5">
-          {matches.length === 0 ? (
-            <p className="rounded-2xl border border-dashed border-line px-4 py-8 text-center text-sm text-mute">
-              Estarán disponibles aquí cuando el administrador programe los partidos.
-            </p>
-          ) : (
-            <ScheduleList matches={matches} teams={sortedTeams} groups={sortedGroups} />
-          )}
+        <div className="mt-10">
+          <Segmented
+            ariaLabel="Secciones del torneo"
+            value={tab}
+            onChange={setTab}
+            options={[
+              { value: 'partidos', label: 'Partidos' },
+              ...(t.format.type !== 'knockout' ? [{ value: 'tabla', label: 'Posiciones' }] : []),
+              { value: 'equipos', label: 'Equipos' }
+            ]}
+          />
         </div>
 
-        <h2 className="mt-12 text-2xl font-semibold tracking-tight">Equipos</h2>
-        <div className="mt-5 space-y-8">
-          {sortedTeams.length === 0 ? (
-            <p className="rounded-2xl border border-dashed border-line px-4 py-8 text-center text-sm text-mute">
-              Aún no hay equipos registrados.
-            </p>
-          ) : usesGroups(t.format.type) ? (
-            <>
-              {sortedGroups.map((g) =>
-                block(
-                  g.name,
-                  sortedTeams.filter((tm) => tm.groupId === g.id)
-                )
+        {tab === 'partidos' && (
+          <div className="mt-8">
+            {matches.length === 0 ? (
+              <p className="rounded-2xl border border-dashed border-line px-4 py-8 text-center text-sm text-mute">
+                Estarán disponibles aquí cuando el administrador programe los partidos.
+              </p>
+            ) : (
+              <>
+                <div className="mb-6 flex flex-wrap gap-3">
+                  <PdfButton
+                    label="Calendario PDF"
+                    make={(pdf) => pdf.exportCalendar({ tournament: t, groups: sortedGroups, teams: sortedTeams, matches })}
+                  />
+                  {matches.some((m) => m.status === 'finished') && (
+                    <PdfButton
+                      label="Resultados PDF"
+                      make={(pdf) => pdf.exportResults({ tournament: t, groups: sortedGroups, teams: sortedTeams, matches })}
+                    />
+                  )}
+                </div>
+                <ScheduleList
+                  matches={matches}
+                  teams={sortedTeams}
+                  groups={sortedGroups}
+                  onReport={(m) => (
+                    <PdfButton
+                      label="Informe PDF"
+                      make={(pdf) => pdf.exportMatchReport({ tournament: t, match: m, teams: sortedTeams, players, groups: sortedGroups, matches })}
+                    />
+                  )}
+                />
+              </>
+            )}
+          </div>
+        )}
+
+        {tab === 'tabla' && (
+          <div className="mt-8">
+            <PdfButton
+              label="Posiciones PDF"
+              make={(pdf) => pdf.exportStandings({ tournament: t, groups: sortedGroups, teams: sortedTeams, matches })}
+            />
+            <div className="mt-6 space-y-8">
+              {tables.map((tb) => (
+                <StandingsTable key={tb.id} title={tb.name} rows={tb.rows} rules={t.rules} qualifiers={t.format.type === 'groups_playoffs' ? t.format.qualifiersPerGroup : 0} />
+              ))}
+            </div>
+            <KnockoutSection t={t} groups={sortedGroups} teams={sortedTeams} matches={matches} editable={false} />
+          </div>
+        )}
+
+        {tab === 'equipos' && (
+          <>
+        <div className="mt-8 space-y-8">
+              {sortedTeams.length === 0 ? (
+                <p className="rounded-2xl border border-dashed border-line px-4 py-8 text-center text-sm text-mute">
+                  Aún no hay equipos registrados.
+                </p>
+              ) : usesGroups(t.format.type) ? (
+                <>
+                  {sortedGroups.map((g) =>
+                    block(
+                      g.name,
+                      sortedTeams.filter((tm) => tm.groupId === g.id)
+                    )
+                  )}
+                  {loose.length > 0 && block('Sin grupo', loose)}
+                </>
+              ) : (
+                block('Equipos', sortedTeams)
               )}
-              {loose.length > 0 && block('Sin grupo', loose)}
-            </>
-          ) : (
-            block('Equipos', sortedTeams)
-          )}
-        </div>
+            </div>
+          </>
+        )}
       </main>
     </div>
   )

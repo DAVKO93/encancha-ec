@@ -1,4 +1,35 @@
-# Encancha.ec — Etapas 1 a 4
+# Encancha.ec — Etapas 1 a 5 (versión completa)
+
+## Si ya tenías la Etapa 4 funcionando (actualizar a la Etapa 5)
+
+Esta etapa agrega la librería de PDF, así que **sí hay que instalar**. No cambia `.env` ni las reglas de Firestore.
+
+1. Reemplaza la carpeta `src`, el archivo `package.json`, el archivo `package-lock.json` y `LEEME.md` por los de este zip (sin tocar `node_modules` ni `.env`).
+2. En la terminal de VS Code, dentro de la carpeta del proyecto:
+
+```
+npm install
+npm run dev
+```
+
+3. Para subir los cambios (Vercel instala solo la librería nueva al desplegar):
+
+```
+git add .
+git commit -m "Etapa 5: clasificación, llaves, resultados y PDF"
+git push
+```
+
+### Qué incluye la Etapa 5
+
+- **Clasificación** (barra inferior): tabla de posiciones por grupo (o general), calculada sola con cada resultado. Respeta los puntos y los criterios de desempate que configuraste (diferencia, a favor, resultado entre empatados, ganados, en contra, juego limpio). Marca a los que pasan a la fase final.
+- **Fase final:** cuando terminan los partidos de grupos, el botón **Generar semifinal** (o la ronda que corresponda) arma los cruces: primero de un grupo contra segundo de otro. Después de cada ronda genera la siguiente, con partido por el tercer puesto si lo activaste, y muestra al **campeón**. Los partidos nuevos nacen sin fecha: se la pones desde el calendario.
+- **Lista de resultados:** todos los partidos jugados, con botón de informe PDF por partido.
+- **PDF:** informe del partido (marcador, ganador, goleadores o anotaciones, tarjetas, cambios, jugadores con su rol y estadísticas, tabla de posiciones con los dos equipos resaltados y cronología), clasificación con fase final, resultados, calendario, y equipos con sus jugadores. Diseño en blanco y negro.
+- **Visitantes:** pestañas Partidos, Posiciones y Equipos, con los mismos PDF disponibles (informe de cada partido terminado, calendario, resultados y posiciones).
+
+---
+
 
 ## Si ya tenías la Etapa 3 funcionando (actualizar a la Etapa 4)
 
@@ -239,6 +270,7 @@ public/           Logo e íconos de la app
 firestore.rules   Reglas de seguridad de la base de datos
 ```
 
-## Próxima etapa
+## Pendientes y mejoras posibles
 
-**Etapa 5: Clasificación, resultados y PDF.** Tabla de posiciones por grupo, lista de resultados, llaves de eliminación, vista completa del visitante y exportación a PDF (informe del partido con jugadores, goleadores y posiciones).
+- Eliminación directa a doble partido (ida y vuelta) todavía no se aplica: cada cruce es a partido único.
+- Estadísticas del campeonato (goleadores, tarjetas acumuladas) y compartir un enlace directo a un partido.
